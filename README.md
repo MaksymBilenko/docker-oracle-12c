@@ -2,9 +2,9 @@ oracle-12c
 ============================
 [![](https://badge.imagelayers.io/sath89/oracle-12c:latest.svg)](https://imagelayers.io/?images=sath89/oracle-12c:latest 'Get your own badge on imagelayers.io')
 
-Oracle Express Edition 11g Release 2 on Ubuntu 14.04.1 LTS
+Oracle Standard Edition 12c Release 1 on Ubuntu
 
-This **Dockerfile** is a [trusted build](https://registry.hub.docker.com/u/sath89/oracle-xe-11g/) of [Docker Registry](https://registry.hub.docker.com/).
+This **Dockerfile** is a [trusted build](https://registry.hub.docker.com/u/sath89/oracle-12c/) of [Docker Registry](https://registry.hub.docker.com/).
 
 ### Installation
 
@@ -12,7 +12,7 @@ This **Dockerfile** is a [trusted build](https://registry.hub.docker.com/u/sath8
 
 Run with 8080 and 1521 ports opened:
 
-    docker run -d -p 8080:8080 -p 1521:1521 sath89/oracle-xe-11g
+    docker run -d -p 8080:8080 -p 1521:1521 sath89/oracle-12c
 
 Run with data on host and reuse it:
 
