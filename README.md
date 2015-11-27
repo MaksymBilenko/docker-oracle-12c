@@ -44,6 +44,20 @@ Connect to Oracle Enterprise Management console with following settings:
     password: oracle
     connect as sysdba: true
 
+By Default web management console is enabled. To disable add env variable:
+
+    docker run -d -e WEB_CONSOLE=false -p 1521:1521 -v /my/oracle/data:/u01/app/oracle sath89/oracle-12c
+    #You can Enable/Disable it on any time
+
+
+
+**TODO LIST**
+* Add Apex to the web management console
+* Add functionality to run custom scripts on startup, for example User creation
+* Add Parameter that would setup processes amount for database (Currently by default processes=300)
+* Improve logging
+* Spike with clustering support
+* Spike with DB migration from 11g
 
 **In case of any issues please post it [here](https://github.com/MaksymBilenko/docker-oracle-12c/issues).**
 

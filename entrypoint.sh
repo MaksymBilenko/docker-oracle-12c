@@ -39,6 +39,14 @@ case "$1" in
 			echo "Database initialized. Please visit http://#containeer:8080/em for extra configuration if needed"
 		fi
 
+		if [ $WEB_CONSOLE == "true" ]; then
+			echo 'Starting web management console'
+			su oracle -c 'echo EXEC DBMS_XDB.sethttpport\(8080\)\; | $ORACLE_HOME/bin/sqlplus / as sysdba'
+		else
+			echo 'Disabling web management console'
+			su oracle -c 'echo EXEC DBMS_XDB.sethttpport\(0\)\; | $ORACLE_HOME/bin/sqlplus / as sysdba'
+		fi
+
 		echo "Database ready to use. Enjoy! ;)"
 
 		##
