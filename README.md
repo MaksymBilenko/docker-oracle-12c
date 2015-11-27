@@ -1,4 +1,4 @@
-oracle-12c
+Oracle Standard Edition 12c Release 1
 ============================
 [![](https://badge.imagelayers.io/sath89/oracle-12c:latest.svg)](https://imagelayers.io/?images=sath89/oracle-12c:latest 'Get your own badge on imagelayers.io')
 
