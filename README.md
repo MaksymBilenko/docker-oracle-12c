@@ -32,10 +32,10 @@ Password for SYS & SYSTEM:
 
 Connect to Oracle Application Express web management console with following settings:
 
-    http://localhost:8080/apex (TODO: Not yet implemented)
+    http://localhost:8080/apex
     workspace: INTERNAL
     user: ADMIN
-    password: oracle
+    password: 0Racle$
 
 Connect to Oracle Enterprise Management console with following settings:
 
@@ -52,10 +52,9 @@ By Default web management console is enabled. To disable add env variable:
 
 
 **TODO LIST**
-* Add Apex to the web management console
+* Web management console HTTPS port
 * Add functionality to run custom scripts on startup, for example User creation
 * Add Parameter that would setup processes amount for database (Currently by default processes=300)
-* Improve logging
 * Spike with clustering support
 * Spike with DB migration from 11g
 
