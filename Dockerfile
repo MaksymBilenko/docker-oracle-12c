@@ -9,7 +9,7 @@ ADD entrypoint.sh /entrypoint.sh
 
 EXPOSE 1521
 EXPOSE 8080
-
+VOLUME ["/u01/app/oracle"]
 
 ENTRYPOINT ["/entrypoint.sh"]
 CMD [""]
