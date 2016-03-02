@@ -65,6 +65,6 @@ case "$1" in
 
 	*)
 		echo "Database is not configured. Please run '/entrypoint.sh' if needed."
-		$1
+		$@
 		;;
 esac
