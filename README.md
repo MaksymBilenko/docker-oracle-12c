@@ -6,6 +6,8 @@ Oracle Standard Edition 12c Release 1 on Ubuntu
 
 This **Dockerfile** is a [trusted build](https://registry.hub.docker.com/u/sath89/oracle-12c/) of [Docker Registry](https://registry.hub.docker.com/).
 
+[![asciicast](https://asciinema.org/a/45878.png)](https://asciinema.org/a/45878)
+
 ### Installation
 
     docker pull sath89/oracle-12c
