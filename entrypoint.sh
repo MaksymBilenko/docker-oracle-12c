@@ -25,6 +25,7 @@ case "$1" in
 			su oracle -c 'echo startup\; | $ORACLE_HOME/bin/sqlplus -S / as sysdba'
 		else
 			echo "Database not initialized. Initializing database."
+			export IMPORT_FROM_VOLUME=true
 
 			#printf "Setting up:\nprocesses=$processes\nsessions=$sessions\ntransactions=$transactions\n"
 
@@ -50,6 +51,27 @@ case "$1" in
 		else
 			echo 'Disabling web management console'
 			su oracle -c 'echo EXEC DBMS_XDB.sethttpport\(0\)\; | $ORACLE_HOME/bin/sqlplus -S / as sysdba'
+		fi
+
+		if [ $IMPORT_FROM_VOLUME ]; then
+			echo "Starting import from '/docker-entrypoint-initdb.d':"
+
+			for f in /docker-entrypoint-initdb.d/*; do
+				echo "found file /docker-entrypoint-initdb.d/$f"
+				case "$f" in
+					*.sh)     echo "[IMPORT] $0: running $f"; . "$f" ;;
+					*.sql)    echo "[IMPORT] $0: running $f"; echo "exit" | su oracle -c "/u01/app/oracle/product/12.1.0/xe/bin/sqlplus -S / as sysdba @$f"; echo ;;
+					*)        echo "[IMPORT] $0: ignoring $f" ;;
+				esac
+				echo
+			done
+
+			echo "Import finished"
+			echo
+		else
+			echo "[IMPORT] Not a first start, SKIPPING Import from Volume '/docker-entrypoint-initdb.d'"
+			echo "[IMPORT] If you want to enable import at any state - add 'IMPORT_FROM_VOLUME=true' variable"
+			echo
 		fi
 
 		echo "Database ready to use. Enjoy! ;)"
