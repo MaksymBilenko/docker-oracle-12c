@@ -27,6 +27,10 @@ case "$1" in
 			echo "Database not initialized. Initializing database."
 			export IMPORT_FROM_VOLUME=true
 
+			if [ -z "$CHARACTER_SET" ]; then
+				export CHARACTER_SET="AL32UTF8"
+			fi
+
 			#printf "Setting up:\nprocesses=$processes\nsessions=$sessions\ntransactions=$transactions\n"
 
 			mv /u01/app/oracle-product/12.1.0/xe/dbs /u01/app/oracle/dbs
@@ -35,7 +39,7 @@ case "$1" in
 			echo "Starting tnslsnr"
 			su oracle -c "/u01/app/oracle/product/12.1.0/xe/bin/tnslsnr &"
 			#create DB for SID: xe
-			su oracle -c "$ORACLE_HOME/bin/dbca -silent -createDatabase -templateName General_Purpose.dbc -gdbname xe.oracle.docker -sid xe -responseFile NO_VALUE -characterSet AL32UTF8 -totalMemory $DBCA_TOTAL_MEMORY -emConfiguration LOCAL -pdbAdminPassword oracle -sysPassword oracle -systemPassword oracle"
+			su oracle -c "$ORACLE_HOME/bin/dbca -silent -createDatabase -templateName General_Purpose.dbc -gdbname xe.oracle.docker -sid xe -responseFile NO_VALUE -characterSet $CHARACTER_SET -totalMemory $DBCA_TOTAL_MEMORY -emConfiguration LOCAL -pdbAdminPassword oracle -sysPassword oracle -systemPassword oracle"
 			
 			echo "Configuring Apex console"
 			cd $ORACLE_HOME/apex
@@ -60,7 +64,7 @@ case "$1" in
 				echo "found file /docker-entrypoint-initdb.d/$f"
 				case "$f" in
 					*.sh)     echo "[IMPORT] $0: running $f"; . "$f" ;;
-					*.sql)    echo "[IMPORT] $0: running $f"; echo "exit" | su oracle -c "/u01/app/oracle/product/12.1.0/xe/bin/sqlplus -S / as sysdba @$f"; echo ;;
+					*.sql)    echo "[IMPORT] $0: running $f"; echo "exit" | su oracle -c "NLS_LANG=.$CHARACTER_SET /u01/app/oracle/product/12.1.0/xe/bin/sqlplus -S / as sysdba @$f"; echo ;;
 					*)        echo "[IMPORT] $0: ignoring $f" ;;
 				esac
 				echo
