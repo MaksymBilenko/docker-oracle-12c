@@ -4,6 +4,7 @@ FROM sath89/oracle-12c-base
 
 ENV WEB_CONSOLE true
 ENV DBCA_TOTAL_MEMORY 1024
+ENV PATH /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/u01/app/oracle/product/12.1.0/xe/bin
 
 ADD entrypoint.sh /entrypoint.sh
 
