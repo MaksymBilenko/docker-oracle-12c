@@ -11,6 +11,7 @@ ln -s /u01/app/oracle-product /u01/app/oracle/product
 echo | /u01/app/oracle/product/12.1.0/xe/root.sh > /dev/null 2>&1 || true
 
 impdp () {
+	set +e
 	DUMP_FILE=$(basename "$1")
 	DUMP_NAME=${DUMP_FILE%.dmp} 
 	cat > /tmp/impdp.sql << EOL
@@ -32,6 +33,7 @@ EOL
 	su oracle -c "NLS_LANG=.$CHARACTER_SET $ORACLE_HOME/bin/impdp IMPDP/IMPDP directory=IMPDP dumpfile=$DUMP_FILE"
 	#Disable IMPDP user
 	echo -e 'ALTER USER IMPDP ACCOUNT LOCK;\nexit;' | su oracle -c "NLS_LANG=.$CHARACTER_SET $ORACLE_HOME/bin/sqlplus -S / as sysdba"
+	set -e
 }
 
 case "$1" in
