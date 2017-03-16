@@ -59,7 +59,10 @@ case "$1" in
 
 			#printf "Setting up:\nprocesses=$processes\nsessions=$sessions\ntransactions=$transactions\n"
 
-			mv /u01/app/oracle-product/12.1.0/xe/dbs /u01/app/oracle/dbs
+			mkdir /u01/app/oracle/dbs
+                        (cd /u01/app/oracle-product/12.1.0/xe/dbs && tar c .) | (cd /u01/app/oracle/dbs && tar xf -)
+                        rm -rf /u01/app/oracle-product/12.1.0/xe/dbs/*
+
 			ln -s /u01/app/oracle/dbs /u01/app/oracle-product/12.1.0/xe/dbs
 
 			echo "Starting tnslsnr"
