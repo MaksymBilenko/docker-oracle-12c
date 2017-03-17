@@ -58,10 +58,9 @@ case "$1" in
 			fi
 
 			#printf "Setting up:\nprocesses=$processes\nsessions=$sessions\ntransactions=$transactions\n"
-
-			mkdir /u01/app/oracle/dbs
-                        (cd /u01/app/oracle-product/12.1.0/xe/dbs && tar c .) | (cd /u01/app/oracle/dbs && tar xf -)
-                        rm -rf /u01/app/oracle-product/12.1.0/xe/dbs/*
+			set +e
+			mv /u01/app/oracle-product/12.1.0/xe/dbs /u01/app/oracle/dbs
+			set -e
 
 			ln -s /u01/app/oracle/dbs /u01/app/oracle-product/12.1.0/xe/dbs
 
