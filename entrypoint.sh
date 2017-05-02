@@ -108,6 +108,7 @@ case "$1" in
 		fi
 
 		echo "Database ready to use. Enjoy! ;)"
+		exit
 
 		##
 		## Workaround for graceful shutdown.
