@@ -10,6 +10,18 @@ ln -s /u01/app/oracle-product /u01/app/oracle/product
 /u01/app/oraInventory/orainstRoot.sh > /dev/null 2>&1
 echo | /u01/app/oracle/product/12.1.0/xe/root.sh > /dev/null 2>&1 || true
 
+if [ -z "$CHARACTER_SET" ]; then
+	if [ "USE_UTF8_IF_CHARSET_EMPTY" == "true" ]; then
+		export CHARACTER_SET="AL32UTF8"
+	fi
+fi
+
+if [ -n "$CHARACTER_SET" ]; then
+	export CHARSET_MOD="NLS_LANG=.$CHARACTER_SET"
+	export CHARSET_INIT="-characterSet $CHARACTER_SET"
+fi
+
+
 impdp () {
 	set +e
 	DUMP_FILE=$(basename "$1")
@@ -29,17 +41,17 @@ grant connect, resource to $DUMP_NAME;
 exit;
 EOL
 
-	su oracle -c "NLS_LANG=.$CHARACTER_SET $ORACLE_HOME/bin/sqlplus -S / as sysdba @/tmp/impdp.sql"
-	su oracle -c "NLS_LANG=.$CHARACTER_SET $ORACLE_HOME/bin/impdp IMPDP/IMPDP directory=IMPDP dumpfile=$DUMP_FILE $IMPDP_OPTIONS"
+	su oracle -c "$CHARSET_MOD $ORACLE_HOME/bin/sqlplus -S / as sysdba @/tmp/impdp.sql"
+	su oracle -c "$CHARSET_MOD $ORACLE_HOME/bin/impdp IMPDP/IMPDP directory=IMPDP dumpfile=$DUMP_FILE $IMPDP_OPTIONS"
 	#Disable IMPDP user
-	echo -e 'ALTER USER IMPDP ACCOUNT LOCK;\nexit;' | su oracle -c "NLS_LANG=.$CHARACTER_SET $ORACLE_HOME/bin/sqlplus -S / as sysdba"
+	echo -e 'ALTER USER IMPDP ACCOUNT LOCK;\nexit;' | su oracle -c "$CHARSET_MOD $ORACLE_HOME/bin/sqlplus -S / as sysdba"
 	set -e
 }
 
 case "$1" in
 	'')
 		#Check for mounted database files
-		if [ "$(ls -A /u01/app/oracle/oradata)" ]; then
+		if [ "$(ls -A /u01/app/oracle/oradata 2>/dev/null)" ]; then
 			echo "found files in /u01/app/oracle/oradata Using them instead of initial database"
 			echo "XE:$ORACLE_HOME:N" >> /etc/oratab
 			chown oracle:dba /etc/oratab
@@ -53,9 +65,6 @@ case "$1" in
 			echo "Database not initialized. Initializing database."
 			export IMPORT_FROM_VOLUME=true
 
-			if [ -z "$CHARACTER_SET" ]; then
-				export CHARACTER_SET="AL32UTF8"
-			fi
 
 			#printf "Setting up:\nprocesses=$processes\nsessions=$sessions\ntransactions=$transactions\n"
 			set +e
@@ -67,7 +76,7 @@ case "$1" in
 			echo "Starting tnslsnr"
 			su oracle -c "/u01/app/oracle/product/12.1.0/xe/bin/tnslsnr &"
 			#create DB for SID: xe
-			su oracle -c "$ORACLE_HOME/bin/dbca -silent -createDatabase -templateName General_Purpose.dbc -gdbname xe.oracle.docker -sid xe -responseFile NO_VALUE -characterSet $CHARACTER_SET -totalMemory $DBCA_TOTAL_MEMORY -emConfiguration LOCAL -pdbAdminPassword oracle -sysPassword oracle -systemPassword oracle"
+			su oracle -c "$ORACLE_HOME/bin/dbca -silent -createDatabase -templateName General_Purpose.dbc -gdbname xe.oracle.docker -sid xe -responseFile NO_VALUE $CHARSET_INIT -totalMemory $DBCA_TOTAL_MEMORY -emConfiguration LOCAL -pdbAdminPassword oracle -sysPassword oracle -systemPassword oracle"
 			
 			echo "Configuring Apex console"
 			cd $ORACLE_HOME/apex
@@ -92,7 +101,7 @@ case "$1" in
 				echo "found file /docker-entrypoint-initdb.d/$f"
 				case "$f" in
 					*.sh)     echo "[IMPORT] $0: running $f"; . "$f" ;;
-					*.sql)    echo "[IMPORT] $0: running $f"; echo "exit" | su oracle -c "NLS_LANG=.$CHARACTER_SET $ORACLE_HOME/bin/sqlplus -S / as sysdba @$f"; echo ;;
+					*.sql)    echo "[IMPORT] $0: running $f"; echo "exit" | su oracle -c "$CHARSET_MOD $ORACLE_HOME/bin/sqlplus -S / as sysdba @$f"; echo ;;
 					*.dmp)    echo "[IMPORT] $0: running $f"; impdp $f ;;
 					*)        echo "[IMPORT] $0: ignoring $f" ;;
 				esac
