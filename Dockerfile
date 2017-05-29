@@ -8,6 +8,7 @@ ENV PATH /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/u01/app/o
 
 ADD entrypoint.sh /entrypoint.sh
 
+RUN apt-get update && apt-get -y install curl && apt-get clean && rm -rf /tmp/* /var/lib/apt/lists/* /var/tmp/* 
 
 EXPOSE 1521
 EXPOSE 8080
