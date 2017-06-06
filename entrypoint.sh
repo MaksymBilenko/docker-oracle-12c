@@ -33,7 +33,7 @@ ALTER USER IMPDP ACCOUNT UNLOCK;
 GRANT dba TO IMPDP WITH ADMIN OPTION;
 -- New Scheme User
 create or replace directory IMPDP as '/docker-entrypoint-initdb.d';
-create tablespace $DUMP_NAME datafile '$ORACLE_HOME/$DUMP_NAME.dbf' size 1000M autoextend on next 100M maxsize unlimited;
+create tablespace $DUMP_NAME datafile '/u01/app/oracle/oradata/$DUMP_NAME.dbf' size 1000M autoextend on next 100M maxsize unlimited;
 create user $DUMP_NAME identified by $DUMP_NAME default tablespace $DUMP_NAME;
 alter user $DUMP_NAME quota unlimited on $DUMP_NAME;
 alter user $DUMP_NAME default role all;
