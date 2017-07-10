@@ -76,7 +76,7 @@ case "$1" in
 			echo "Starting tnslsnr"
 			su oracle -c "/u01/app/oracle/product/12.1.0/xe/bin/tnslsnr &"
 			#create DB for SID: xe
-			su oracle -c "$ORACLE_HOME/bin/dbca -silent -createDatabase -templateName General_Purpose.dbc -gdbname xe.oracle.docker -sid xe -responseFile NO_VALUE $CHARSET_INIT -totalMemory $DBCA_TOTAL_MEMORY -emConfiguration LOCAL -pdbAdminPassword oracle -sysPassword oracle -systemPassword oracle"
+			su oracle -c "$ORACLE_HOME/bin/dbca -silent -createDatabase -templateName General_Purpose.dbc -gdbname xe -sid xe -responseFile NO_VALUE $CHARSET_INIT -totalMemory $DBCA_TOTAL_MEMORY -emConfiguration LOCAL -pdbAdminPassword oracle -sysPassword oracle -systemPassword oracle"
 			
 			echo "Configuring Apex console"
 			cd $ORACLE_HOME/apex
