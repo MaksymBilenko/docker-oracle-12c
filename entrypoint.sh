@@ -49,6 +49,7 @@ EOL
 }
 
 startNoVNC () {
+	echo "Starting Xvfb + x11vnc + fluxbox + novnc"
 	nohup Xvfb ${DISPLAY} -ac -screen 0 1024x768x24 >> /var/log/xvfb.log &
 	sleep 3
 	nohup /usr/bin/fluxbox -display ${DISPLAY} -screen 0 >> /var/log/fluxbox.log &
@@ -61,6 +62,7 @@ startNoVNC () {
 
 case "$1" in
 	'')
+		startNoVNC
 		#Check for mounted database files
 		if [ "$(ls -A /u01/app/oracle/oradata 2>/dev/null)" ]; then
 			echo "found files in /u01/app/oracle/oradata Using them instead of initial database"
@@ -78,9 +80,7 @@ case "$1" in
 
 
 			#printf "Setting up:\nprocesses=$processes\nsessions=$sessions\ntransactions=$transactions\n"
-			set +e
-			mv /u01/app/oracle-product/12.1.0/xe/dbs /u01/app/oracle/dbs
-			set -e
+			mv /u01/app/oracle-product/12.1.0/xe/dbs /u01/app/oracle/dbs || true
 
 			ln -s /u01/app/oracle/dbs /u01/app/oracle-product/12.1.0/xe/dbs
 
@@ -88,7 +88,6 @@ case "$1" in
 			su oracle -c "/u01/app/oracle/product/12.1.0/xe/bin/tnslsnr &"
 			#create DB for SID: xe
 			if [ "${MANUAL_DBCA}" == 'true' ]; then
-				startNoVNC
 				echo "Open in Browser http://localhost:6800/vnc_auto.html with password ${VNC_PASSWORD} for future configuration"
 				su oracle -c "$ORACLE_HOME/bin/dbca"
 			else
