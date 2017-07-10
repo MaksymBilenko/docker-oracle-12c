@@ -48,6 +48,17 @@ EOL
 	set -e
 }
 
+startNoVNC () {
+	nohup Xvfb ${DISPLAY} -ac -screen 0 1024x768x24 >> /var/log/xvfb.log &
+	sleep 3
+	nohup /usr/bin/fluxbox -display ${DISPLAY} -screen 0 >> /var/log/fluxbox.log &
+	sleep 3
+	nohup x11vnc -display ${DISPLAY} -forever -passwd ${VNC_PASSWORD:-oracle} >> /var/log/x11vnc.log &
+	sleep 3
+	nohup websockify -D --web /usr/share/novnc 6800 localhost:5900 >> /var/log/novnc.log &
+	sleep 3
+}
+
 case "$1" in
 	'')
 		#Check for mounted database files
@@ -76,7 +87,13 @@ case "$1" in
 			echo "Starting tnslsnr"
 			su oracle -c "/u01/app/oracle/product/12.1.0/xe/bin/tnslsnr &"
 			#create DB for SID: xe
-			su oracle -c "$ORACLE_HOME/bin/dbca -silent -createDatabase -templateName General_Purpose.dbc -gdbname xe -sid xe -responseFile NO_VALUE $CHARSET_INIT -totalMemory $DBCA_TOTAL_MEMORY -emConfiguration LOCAL -pdbAdminPassword oracle -sysPassword oracle -systemPassword oracle"
+			if [ "${MANUAL_DBCA}" == 'true' ]; then
+				startNoVNC
+				echo "Open in Browser http://localhost:6800/vnc_auto.html with password ${VNC_PASSWORD} for future configuration"
+				su oracle -c "$ORACLE_HOME/bin/dbca"
+			else
+				su oracle -c "$ORACLE_HOME/bin/dbca -silent -createDatabase -templateName General_Purpose.dbc -gdbname xe -sid xe -responseFile NO_VALUE $CHARSET_INIT -totalMemory $DBCA_TOTAL_MEMORY -emConfiguration LOCAL -pdbAdminPassword oracle -sysPassword oracle -systemPassword oracle"
+			fi
 			
 			echo "Configuring Apex console"
 			cd $ORACLE_HOME/apex

@@ -16,6 +16,12 @@ Run with 8080 and 1521 ports opened:
 
     docker run -d -p 8080:8080 -p 1521:1521 sath89/oracle-12c
 
+Run with manual database initialization:
+
+    docker run -d -p 8080:8080 -p 1521:1521 -p 6800:6800 -e MANUAL_DBCA=true -e VNC_PASSWORD=passwd sath89/oracle-12c
+    #Default VNC_PASSWORD=oracle
+    #Open in Browser http://localhost:6800/vnc_auto.html
+
 Run with data on host and reuse it:
 
     docker run -d -p 8080:8080 -p 1521:1521 -v /my/oracle/data:/u01/app/oracle sath89/oracle-12c
