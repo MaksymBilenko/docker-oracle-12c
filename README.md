@@ -29,14 +29,14 @@ Connect database with following setting:
     hostname: localhost
     port: 1521
     sid: xe
-    service name: xe.oracle.docker
+    service name: xe
     username: system
     password: oracle
 
 To connect using sqlplus:
 
 <pre>
-sqlplus system/oracle@//localhost:1521/xe.oracle.docker
+sqlplus system/oracle@//localhost:1521/xe
 </pre>
 
 Password for SYS & SYSTEM:
