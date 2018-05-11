@@ -1,13 +1,9 @@
 #!/bin/bash
 set -e
 
-# Copy initdb entrypoint to avoid changes when mounting as volume
-ENTRYPOINTINITDB=`mktemp -d`
-cp -r /docker-entrypoint-initdb.d/* ${ENTRYPOINTINITDB}
-
 # Prevent owner issues on mounted folders
 chown -R oracle:dba /u01/app/oracle
-chown -R oracle:dba ${ENTRYPOINTINITDB}
+chown -R oracle:dba /docker-entrypoint-initdb.d/
 rm -f /u01/app/oracle/product
 ln -s /u01/app/oracle-product /u01/app/oracle/product
 
@@ -37,7 +33,7 @@ CREATE USER IMPDP IDENTIFIED BY IMPDP;
 ALTER USER IMPDP ACCOUNT UNLOCK;
 GRANT dba TO IMPDP WITH ADMIN OPTION;
 -- New Scheme User
-create or replace directory IMPDP as '${ENTRYPOINTINITDB}';
+create or replace directory IMPDP as '/docker-entrypoint-initdb.d';
 create tablespace $DUMP_NAME datafile '/u01/app/oracle/oradata/$DUMP_NAME.dbf' size 1000M autoextend on next 100M maxsize unlimited;
 create user $DUMP_NAME identified by $DUMP_NAME default tablespace $DUMP_NAME;
 alter user $DUMP_NAME quota unlimited on $DUMP_NAME;
@@ -102,7 +98,7 @@ case "$1" in
 		if [ $IMPORT_FROM_VOLUME ]; then
 			echo "Starting import from '/docker-entrypoint-initdb.d':"
 
-			for f in ${ENTRYPOINTINITDB}/*; do
+			for f in /docker-entrypoint-initdb.d/*; do
 				echo "found file /docker-entrypoint-initdb.d/$f"
 				case "$f" in
 					*.sh)     echo "[IMPORT] $0: running $f"; . "$f" ;;
