@@ -1,9 +1,12 @@
 #!/bin/bash
 set -e
 
-# Prevent owner issues on mounted folders
-chown -R oracle:dba /u01/app/oracle
-chown -R oracle:dba /docker-entrypoint-initdb.d/
+# Prevent owner issues on mounted folders, if desired
+if [ "$ENABLE_OWNERSHIP_FIX" = true ] ; then
+	chown -R oracle:dba /u01/app/oracle
+	chown -R oracle:dba /docker-entrypoint-initdb.d/
+fi
+
 rm -f /u01/app/oracle/product
 ln -s /u01/app/oracle-product /u01/app/oracle/product
 
