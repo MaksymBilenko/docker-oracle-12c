@@ -98,8 +98,8 @@ case "$1" in
 		if [ $IMPORT_FROM_VOLUME ]; then
 			echo "Starting import from '/docker-entrypoint-initdb.d':"
 
-			for f in /docker-entrypoint-initdb.d/*; do
-				echo "found file /docker-entrypoint-initdb.d/$f"
+			for f in $(ls /docker-entrypoint-initdb.d/*); do
+				echo "found file $f"
 				case "$f" in
 					*.sh)     echo "[IMPORT] $0: running $f"; . "$f" ;;
 					*.sql)    echo "[IMPORT] $0: running $f"; echo "exit" | su oracle -c "$CHARSET_MOD $ORACLE_HOME/bin/sqlplus -S / as sysdba @$f"; echo ;;
