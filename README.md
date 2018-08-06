@@ -73,7 +73,7 @@ Start with additional init scripts or dumps:
     
 By default Import from `docker-entrypoint-initdb.d` is enabled only if you are initializing database (1st run).
 
-To customize dump import use `IMPDP_OPTIONS` env variable like `-e IMPDP_OPTION="REMAP_TABLESPACE=FOO:BAR"`
+To customize dump import use `IMPDP_OPTIONS` env variable like `-e IMPDP_OPTIONS="REMAP_TABLESPACE=FOO:BAR"`
 To run import at any case add `-e IMPORT_FROM_VOLUME=true`
 
 **In case of using DMP imports dump file should be named like ${IMPORT_SCHEME_NAME}.dmp**
