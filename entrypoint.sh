@@ -8,7 +8,7 @@ ln -s /u01/app/oracle-product /u01/app/oracle/product
 
 #Run Oracle root scripts
 /u01/app/oraInventory/orainstRoot.sh > /dev/null 2>&1
-echo | /u01/app/oracle/product/12.1.0/xe/root.sh > /dev/null 2>&1 || true
+echo | /u01/app/oracle/product/12.2.0/SE/root.sh > /dev/null 2>&1 || true
 
 if [ -z "$CHARACTER_SET" ]; then
 	if [ "${USE_UTF8_IF_CHARSET_EMPTY}" == "true" ]; then
@@ -52,8 +52,6 @@ startNoVNC () {
 	echo "Starting Xvfb + x11vnc + fluxbox + novnc"
 	nohup Xvfb ${DISPLAY} -ac -screen 0 1024x768x24 >> /var/log/xvfb.log &
 	sleep 3
-	nohup /usr/bin/fluxbox -display ${DISPLAY} -screen 0 >> /var/log/fluxbox.log &
-	sleep 3
 	nohup x11vnc -display ${DISPLAY} -forever -passwd ${VNC_PASSWORD:-oracle} >> /var/log/x11vnc.log &
 	sleep 3
 	nohup websockify -D --web /usr/share/novnc 6800 localhost:5900 >> /var/log/novnc.log &
@@ -66,13 +64,13 @@ case "$1" in
 		#Check for mounted database files
 		if [ "$(ls -A /u01/app/oracle/oradata 2>/dev/null)" ]; then
 			echo "found files in /u01/app/oracle/oradata Using them instead of initial database"
-			echo "XE:$ORACLE_HOME:N" >> /etc/oratab
+			echo "$ORACLE_SID:$ORACLE_HOME:N" >> /etc/oratab
 			chown oracle:dba /etc/oratab
 			chmod 664 /etc/oratab
-			rm -rf /u01/app/oracle-product/12.1.0/xe/dbs
-			ln -s /u01/app/oracle/dbs /u01/app/oracle-product/12.1.0/xe/dbs
+			rm -rf /u01/app/oracle-product/12.2.0/SE/dbs
+			ln -s /u01/app/oracle/dbs /u01/app/oracle-product/12.2.0/SE/dbs
 			#Startup Database
-			su oracle -c "/u01/app/oracle/product/12.1.0/xe/bin/tnslsnr &"
+			su oracle -c "/u01/app/oracle/product/12.2.0/SE/bin/tnslsnr &"
 			su oracle -c 'echo startup\; | $ORACLE_HOME/bin/sqlplus -S / as sysdba'
 		else
 			echo "Database not initialized. Initializing database."
@@ -80,18 +78,18 @@ case "$1" in
 
 
 			#printf "Setting up:\nprocesses=$processes\nsessions=$sessions\ntransactions=$transactions\n"
-			mv /u01/app/oracle-product/12.1.0/xe/dbs /u01/app/oracle/dbs || true
+			mv /u01/app/oracle-product/12.2.0/SE/dbs /u01/app/oracle/dbs || true
 
-			ln -s /u01/app/oracle/dbs /u01/app/oracle-product/12.1.0/xe/dbs
+			ln -s /u01/app/oracle/dbs /u01/app/oracle-product/12.2.0/SE/dbs
 
 			echo "Starting tnslsnr"
-			su oracle -c "/u01/app/oracle/product/12.1.0/xe/bin/tnslsnr &"
-			#create DB for SID: xe
+			su oracle -c "/u01/app/oracle/product/12.2.0/SE/bin/tnslsnr &"
+			#create DB for SID: $ORACLE_SID
 			if [ "${MANUAL_DBCA}" == 'true' ]; then
 				echo "Open in Browser http://localhost:6800/vnc_auto.html with password ${VNC_PASSWORD} for future configuration"
 				su oracle -c "$ORACLE_HOME/bin/dbca"
 			else
-				su oracle -c "$ORACLE_HOME/bin/dbca -silent -createDatabase -templateName General_Purpose.dbc -gdbname xe -sid xe -responseFile NO_VALUE $CHARSET_INIT -totalMemory $DBCA_TOTAL_MEMORY -emConfiguration LOCAL -pdbAdminPassword oracle -sysPassword oracle -systemPassword oracle"
+				su oracle -c "$ORACLE_HOME/bin/dbca -silent -createDatabase -templateName General_Purpose.dbc -gdbname $ORACLE_SID -sid $ORACLE_SID -responseFile NO_VALUE $CHARSET_INIT -totalMemory $DBCA_TOTAL_MEMORY -emConfiguration LOCAL -pdbAdminPassword oracle -sysPassword oracle -systemPassword oracle"
 			fi
 			
 			echo "Configuring Apex console"

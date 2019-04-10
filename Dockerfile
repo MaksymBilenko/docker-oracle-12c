@@ -4,12 +4,14 @@ FROM quay.io/maksymbilenko/oracle-12c-base:latest
 
 ENV WEB_CONSOLE true
 ENV DBCA_TOTAL_MEMORY 2048
-ENV PATH /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/u01/app/oracle/product/12.1.0/xe/bin
+ENV PATH /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/u01/app/oracle/product/12.2.0/SE/bin
 ENV DISPLAY :0
 ENV VNC_PASSWORD oracle
 ENV MANUAL_DBCA false
+ENV ORACLE_HOME /u01/app/oracle/product/12.2.0/SE
+ENV ORACLE_SID xe
 
-RUN apt-get update && apt-get -y install curl xvfb xterm x11vnc fluxbox dbus-x11 xfonts-100dpi xfonts-75dpi xfonts-cyrillic novnc && apt-get clean && rm -rf /tmp/* /var/lib/apt/lists/* /var/tmp/* 
+RUN yum install -y epel-release && yum --enablerepo=epel -y install tigervnc-server novnc python-websockify numpy curl xorg-x11-server-Xvfb.x86_64 xterm x11vnc novnc && yum clean all
 
 EXPOSE 1521
 EXPOSE 8080
