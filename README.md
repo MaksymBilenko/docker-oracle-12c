@@ -1,28 +1,28 @@
 Oracle Standard Edition 12c Release 1
 ============================
 
-[![](https://badge.imagelayers.io/sath89/oracle-12c:latest.svg)](https://imagelayers.io/?images=sath89/oracle-12c:latest 'Get your own badge on imagelayers.io')
+[![](https://badge.imagelayers.io/quay.io/maksymbilenko/oracle-12c:latest.svg)](https://imagelayers.io/?images=quay.io/maksymbilenko/oracle-12c:latest 'Get your own badge on imagelayers.io')
 
 Oracle Standard Edition 12c Release 1 on Ubuntu
-This **Dockerfile** is a [trusted build](https://registry.hub.docker.com/u/sath89/oracle-12c/) of [Docker Registry](https://registry.hub.docker.com/).
+This **Dockerfile** is a [trusted build](https://registry.hub.docker.com/u/quay.io/maksymbilenko/oracle-12c/) of [Docker Registry](https://registry.hub.docker.com/).
 
 [![asciicast](https://asciinema.org/a/45878.png)](https://asciinema.org/a/45878)
 
 ### Installation
 
-    docker pull sath89/oracle-12c
+    docker pull quay.io/maksymbilenko/oracle-12c
 
 Run with 8080 and 1521 ports opened:
 
-    docker run -d -p 8080:8080 -p 1521:1521 sath89/oracle-12c
+    docker run -d -p 8080:8080 -p 1521:1521 quay.io/maksymbilenko/oracle-12c
 
 Run with data on host and reuse it:
 
-    docker run -d -p 8080:8080 -p 1521:1521 -v /my/oracle/data:/u01/app/oracle sath89/oracle-12c
+    docker run -d -p 8080:8080 -p 1521:1521 -v /my/oracle/data:/u01/app/oracle quay.io/maksymbilenko/oracle-12c
 
 Run with Custom DBCA_TOTAL_MEMORY (in Mb):
 
-    docker run -d -p 8080:8080 -p 1521:1521 -v /my/oracle/data:/u01/app/oracle -e DBCA_TOTAL_MEMORY=1024 sath89/oracle-12c
+    docker run -d -p 8080:8080 -p 1521:1521 -v /my/oracle/data:/u01/app/oracle -e DBCA_TOTAL_MEMORY=1024 quay.io/maksymbilenko/oracle-12c
 
 Connect database with following setting:
 
@@ -64,12 +64,12 @@ Connect to Oracle Enterprise Management console with following settings:
 
 By Default web management console is enabled. To disable add env variable:
 
-    docker run -d -e WEB_CONSOLE=false -p 1521:1521 -v /my/oracle/data:/u01/app/oracle sath89/oracle-12c
+    docker run -d -e WEB_CONSOLE=false -p 1521:1521 -v /my/oracle/data:/u01/app/oracle quay.io/maksymbilenko/oracle-12c
     #You can Enable/Disable it on any time
 
 Start with additional init scripts or dumps:
 
-    docker run -d -p 1521:1521 -v /my/oracle/data:/u01/app/oracle -v /my/oracle/init/SCRIPTSorSQL:/docker-entrypoint-initdb.d sath89/oracle-12c
+    docker run -d -p 1521:1521 -v /my/oracle/data:/u01/app/oracle -v /my/oracle/init/SCRIPTSorSQL:/docker-entrypoint-initdb.d quay.io/maksymbilenko/oracle-12c
     
 By default Import from `docker-entrypoint-initdb.d` is enabled only if you are initializing database (1st run).
 
