@@ -1,15 +1,15 @@
-FROM     ubuntu:latest
+FROM centos:7
 
-MAINTAINER Maksym Bilenko "sath891@gmail.com"
+RUN yum install -y wget unzip binutils.x86_64 compat-libcap1.x86_64 gcc.x86_64 gcc-c++.x86_64 glibc.i686 glibc.x86_64 \
+glibc-devel.i686 glibc-devel.x86_64 ksh compat-libstdc++-33 libaio.i686 libaio.x86_64 libaio-devel.i686 libaio-devel.x86_64 \
+libgcc.i686 libgcc.x86_64 libstdc++.i686 libstdc++.x86_64 libstdc++-devel.i686 libstdc++-devel.x86_64 libXi.i686 libXi.x86_64 \
+libXtst.i686 libXtst.x86_64 make.x86_64 sysstat.x86_64 && yum clean all
 
-ENV	DEBIAN_FRONTEND	noninteractive
+ENV ORACLE_DATABASE_DOWNLOAD_URL https://www.dropbox.com/s/maex8fu98o6j0xj/linuxx64_12201_database.zip?dl=0
 
-ENV ORACLE_HOME		/u01/app/oracle/product/12.1.0/xe
-ENV ORACLE_SID 		xe
+ADD install /install
 
-RUN apt-get update && apt-get install libaio1 -y && apt-get clean && rm -rf /tmp/* /var/lib/apt/lists/* /var/tmp/* 
-RUN ln -s /usr/bin/awk /bin/awk
+RUN /install/oracle_12c_install.sh /install/oracle-12c-se.rsp
 
-RUN groupadd --gid 1001 dba && useradd -g dba -m --uid 1001 oracle
+RUN mv /u01/app/oracle/product /u01/app/oracle-product
 
-ADD oracle-12c.tar.gz /
