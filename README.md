@@ -1,4 +1,4 @@
-Oracle Standard Edition 12c Release 1
+Oracle Standard Edition 12c Release 2
 ============================
 
 [![](https://badge.imagelayers.io/quay.io/maksymbilenko/oracle-12c:latest.svg)](https://imagelayers.io/?images=quay.io/maksymbilenko/oracle-12c:latest 'Get your own badge on imagelayers.io')
