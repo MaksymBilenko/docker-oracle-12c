@@ -3,7 +3,7 @@ Oracle Standard Edition 12c Release 2
 
 [![](https://badge.imagelayers.io/quay.io/maksymbilenko/oracle-12c:latest.svg)](https://imagelayers.io/?images=quay.io/maksymbilenko/oracle-12c:latest 'Get your own badge on imagelayers.io')
 
-Oracle Standard Edition 12c Release 2 on Ubuntu
+Oracle Standard Edition 12c Release 2 on CentOS
 This **Dockerfile** is a [trusted build](https://registry.hub.docker.com/u/quay.io/maksymbilenko/oracle-12c/) of [Docker Registry](https://registry.hub.docker.com/).
 
 [![asciicast](https://asciinema.org/a/45878.png)](https://asciinema.org/a/45878)
