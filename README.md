@@ -52,7 +52,7 @@ Connect to Oracle Application Express web management console with following sett
 
 Apex upgrade up to v 5.*
 
-    docker run -it --rm --volumes-from ${DB_CONTAINER_NAME} --link ${DB_CONTAINER_NAME}:oracle-database -e PASS=YourSYSPASS sath89/apex install
+    docker run -it --rm --volumes-from ${DB_CONTAINER_NAME} --link ${DB_CONTAINER_NAME}:oracle-database -e PASS=YourSYSPASS quay.io/maksymbilenko/docker-oracle-apex install
 Details could be found here: https://github.com/MaksymBilenko/docker-oracle-apex
 
 Connect to Oracle Enterprise Management console with following settings:
