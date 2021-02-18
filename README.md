@@ -17,7 +17,7 @@ Run with data on host and reuse it:
 
 Run with Custom DBCA_TOTAL_MEMORY (in Mb):
 
-    docker run -d -p 8080:8080 -p 1521:1521 -v /my/oracle/data:/u01/app/oracle -e DBCA_TOTAL_MEMORY=1024 quay.io/maksymbilenko/oracle-12c
+    docker run -d -p 8080:8080 -p 1521:1521 -v /my/oracle/data:/u01/app/oracle -e DBCA_TOTAL_MEMORY=4096 quay.io/maksymbilenko/oracle-12c
 
 Connect database with following setting:
 
